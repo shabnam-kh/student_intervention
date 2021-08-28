@@ -91,9 +91,9 @@ def tune_classifier_params(X_all, y_all, clf, parameters, train_size):
 
     _logger.info("f1_score {}".format(df_f1))
     print "mean f1 score {}".format(df_f1.mean())
-    _logger.info( "gamma {}".format(df_gamma[0]))
+    _logger.info("gamma {}".format(df_gamma[0]))
     print "gamma {}".format(df_gamma[0])
-    _logger.info( "c param {}".format(df_c[0]))
+    _logger.info("c param {}".format(df_c[0]))
     print "c param {}".format(df_c[0])
 
     return best_clf
@@ -105,5 +105,3 @@ def predict_by_best_estimator(X_all, y_all, clf, train_size):
     _, f1_test = predict_labels(clf, X_test, y_test)
     print "Tuned model has a training F1 score of {:.4f}.".format(f1_train)
     print "Tuned model has a testing F1 score of {:.4f}.".format(f1_test)
-
-
