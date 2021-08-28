@@ -17,22 +17,22 @@ class StudentAnalyzer:
         passed_percentage = student_passed_counts * 100 / student_counts  # to figureout if data is unbalanced
 
         _logger.info("student count is {}".format(student_counts))
-        _logger.info( "feature count is {}".format(feature_counts))
-        _logger.info( "passed student count is {}".format(student_passed_counts))
-        _logger.info( "failed student count is {}".format(student_failed_counts))
-        _logger.info( "passed_percentage is {}%".format(passed_percentage))
+        _logger.info("feature count is {}".format(feature_counts))
+        _logger.info("passed student count is {}".format(student_passed_counts))
+        _logger.info("failed student count is {}".format(student_failed_counts))
+        _logger.info("passed_percentage is {}%".format(passed_percentage))
 
     def prepare_student_data(self):
         feature_columns = list(self.student_data.columns[:-1])
         label_column = self.student_data.columns[-1]
 
-        _logger.info( "list of features {}".format(feature_columns))
-        _logger.info( "label column is {}".format(label_column))
+        _logger.info("list of features {}".format(feature_columns))
+        _logger.info("label column is {}".format(label_column))
 
         self.X_all = self.student_data[feature_columns]
         self.y_all = self.student_data[label_column]
 
-        _logger.info( "features sample value {}".format(self.X_all.head()))
+        _logger.info("features sample value {}".format(self.X_all.head()))
 
     def preprocess_features(self):
         """
@@ -55,9 +55,12 @@ class StudentAnalyzer:
                 feature_value = pd.get_dummies(feature_value, prefix=feature_name)
             processed_features = processed_features.join(feature_value)
 
-        _logger.info( "processd features, count is {}, features are {}".format(len(processed_features.columns),
-                                                                       list(processed_features.columns)))
+        _logger.info("processd features, count is {}, features are {}".format(len(processed_features.columns),
+                                                                              list(processed_features.columns)))
         self.X_all = processed_features
+
+    def reformat_labels(self):
+        self.y_all = self.y_all.replace(['yes', 'no'], [1, 0])
 
     def shuffle_split_data(self, train_size):
         test_size = self.X_all.shape[0] - train_size
