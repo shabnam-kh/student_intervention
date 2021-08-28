@@ -25,6 +25,7 @@ def main(argv):
     X_all, y_all = prepare_student_data(student_data)
     X_all = preprocess_features(X_all)
     y_all = reformat_labels(y_all)
+
     general_classification(X_all, y_all, [GaussianNB(), RandomForestClassifier(), SVC()],
                            [100, 200, 300])
 
