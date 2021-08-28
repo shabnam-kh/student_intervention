@@ -5,6 +5,7 @@ from sklearn.metrics import f1_score
 from sklearn.model_selection import GridSearchCV
 
 from custom_logging import Logger
+from data_analyzer import shuffle_split_data
 
 _logger = Logger('Classification')
 
@@ -38,7 +39,7 @@ def train_test_predict(clf, X_train, y_train, X_test, y_test):
     return train_time, train_score, test_time, test_score
 
 
-def general_classification(student_analyzer, clf_list, train_size_list):
+def general_classification(X_all, y_all, clf_list, train_size_list):
     for clf in clf_list:
         for size in train_size_list:
             df = pd.DataFrame(columns=['Training_Size',
@@ -48,7 +49,7 @@ def general_classification(student_analyzer, clf_list, train_size_list):
                                        'F1_Training_Score',
                                        'F1_Testing_Score'])
 
-            X_train, X_test, y_train, y_test = student_analyzer.shuffle_split_data(train_size=size)
+            X_train, X_test, y_train, y_test = shuffle_split_data(X_all, y_all, train_size=size)
 
             cycles = 10
             for i in range(0, cycles):
@@ -69,14 +70,14 @@ def general_classification(student_analyzer, clf_list, train_size_list):
             print "**********************************************************"
 
 
-def tune_classifier_params(student_analyzer, clf, parameters, train_size):
+def tune_classifier_params(X_all, y_all, clf, parameters, train_size):
     f1_scores = []
     gamma = []
     c = []
     cycles = 10
     for i in range(0, cycles):
         grid_clf = GridSearchCV(clf, parameters, scoring='f1')
-        X_train, X_test, y_train, y_test = student_analyzer.shuffle_split_data(train_size=train_size)
+        X_train, X_test, y_train, y_test = shuffle_split_data(X_all, y_all, train_size=train_size)
 
         grid_clf.fit(X_train, y_train)
         f1_scores.append(grid_clf.score(X_test, y_test))
@@ -98,8 +99,8 @@ def tune_classifier_params(student_analyzer, clf, parameters, train_size):
     return best_clf
 
 
-def predict_by_best_estimator(student_analyzer, clf, train_size):
-    X_train, X_test, y_train, y_test = student_analyzer.shuffle_split_data(train_size=train_size)
+def predict_by_best_estimator(X_all, y_all, clf, train_size):
+    X_train, X_test, y_train, y_test = shuffle_split_data(X_all, y_all, train_size=train_size)
     _, f1_train = predict_labels(clf, X_train, y_train)
     _, f1_test = predict_labels(clf, X_test, y_test)
     print "Tuned model has a training F1 score of {:.4f}.".format(f1_train)
